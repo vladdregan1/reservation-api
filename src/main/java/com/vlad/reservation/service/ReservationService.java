@@ -18,7 +18,7 @@ public class ReservationService {
 
     public Reservation createReservation(Reservation reservation) {
         if (reservation.getReservationTime() != null && reservation.getReservationTime().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Data rezervării nu poate fi în trecut!");
+            throw new IllegalArgumentException("Reservation date cannot be in the past!");
         }
 
         return reservationRepository.save(reservation);
