@@ -2,6 +2,7 @@ package com.vlad.reservation.controller;
 
 import com.vlad.reservation.entity.Reservation;
 import com.vlad.reservation.service.ReservationService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
+    public ResponseEntity<Reservation> createReservation(@Valid @RequestBody Reservation reservation) {
         Reservation savedReservation = reservationService.createReservation(reservation);
         return new ResponseEntity<>(savedReservation, HttpStatus.CREATED);
     }
