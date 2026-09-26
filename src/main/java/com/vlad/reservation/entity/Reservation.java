@@ -1,7 +1,6 @@
 package com.vlad.reservation.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 
@@ -14,21 +13,15 @@ public class Reservation {
     private Long id;
 
     @Column(nullable = false)
-    @NotBlank(message = "Customer name is mandatory.")
     private String customerName;
 
     @Column(nullable = false)
-    @NotBlank(message = "Email is mandatory.")
-    @Email(message = "Invalid email format.")
     private String email;
 
     @Column(nullable = false)
-    @NotNull(message = "Reservation time is mandatory.")
-    @Future(message = "Reservation time must be in the future.")
     private LocalDateTime reservationTime;
 
     @Column(nullable = false)
-    @Min(value = 1, message = "Minimum 1 guest is required.")
     private int numberOfGuests;
 
     @Column(nullable = false, length = 20)
