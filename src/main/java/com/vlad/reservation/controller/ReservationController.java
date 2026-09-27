@@ -4,6 +4,7 @@ import com.vlad.reservation.dto.ReservationRequest;
 import com.vlad.reservation.dto.ReservationResponse;
 import com.vlad.reservation.service.ReservationService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,13 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getAllReservations() {
-        List<ReservationResponse> reservations = reservationService.getAllReservations();
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<Page<ReservationResponse>> getAllReservations(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "ASC", required = false) String sortDir
+    ) {
+        Page<ReservationResponse> responses = reservationService.getAllReservations(pageNo, pageSize, sortBy, sortDir);
+        return ResponseEntity.ok(responses);
     }
 }
