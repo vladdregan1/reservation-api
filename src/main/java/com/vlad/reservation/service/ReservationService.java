@@ -4,6 +4,10 @@ import com.vlad.reservation.dto.ReservationRequest;
 import com.vlad.reservation.dto.ReservationResponse;
 import com.vlad.reservation.entity.Reservation;
 import com.vlad.reservation.repository.ReservationRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,12 +35,16 @@ public class ReservationService {
         return mapToResponse(savedEntity);
     }
 
-    public List<ReservationResponse> getAllReservations() {
-        List<Reservation> reservations = reservationRepository.findAll();
+    public Page<ReservationResponse> getAllReservations(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
-        return reservations.stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Reservation> reservations = reservationRepository.findAll(pageable);
+
+        return reservations.map(this::mapToResponse);
     }
 
     private ReservationResponse mapToResponse(Reservation entity) {
