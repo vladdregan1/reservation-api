@@ -37,4 +37,19 @@ public class ReservationController {
         Page<ReservationResponse> responses = reservationService.getAllReservations(pageNo, pageSize, sortBy, sortDir);
         return ResponseEntity.ok(responses);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        reservationService.deleteReservation(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ReservationResponse> updateReservation(
+            @PathVariable Long id,
+            @Valid @RequestBody ReservationRequest request) {
+
+        ReservationResponse response = reservationService.updateReservation(id, request);
+        return ResponseEntity.ok(response);
+    }
 }
