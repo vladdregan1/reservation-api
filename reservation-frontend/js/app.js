@@ -1,14 +1,13 @@
+let currentPage = 0;
+const pageSize = 5;
+
 async function fetchReservations() {
     try {
-        const response = await fetch('http://localhost:8080/api/reservations');
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        const response = await fetch(`http://localhost:8080/api/reservations?pageNo=${currentPage}&pageSize=${pageSize}`);
+        if (!response.ok) throw new Error('Network response was not ok');
 
         const data = await response.json();
         const tableBody = document.getElementById('reservations-table-body');
-
         tableBody.innerHTML = '';
 
         data.content.forEach(reservation => {
@@ -23,12 +22,21 @@ async function fetchReservations() {
             tableBody.innerHTML += row;
         });
 
+        document.getElementById('pageInfo').innerText = `Page ${data.number + 1} of ${data.totalPages || 1}`;
+        document.getElementById('prevBtn').disabled = data.first;
+        document.getElementById('nextBtn').disabled = data.last;
+
     } catch (error) {
         console.error('Error fetching reservations:', error);
-        document.getElementById('reservations-table-body').innerHTML =
-            `<tr><td colspan="6" style="color:red;">Error connecting to API. Is Spring Boot running?</td></tr>`;
     }
 }
+
+function changePage(direction) {
+    currentPage += direction;
+    fetchReservations();
+}
+
+window.onload = fetchReservations;
 
 window.onload = fetchReservations;
 
@@ -60,6 +68,6 @@ document.getElementById('reservation-form').addEventListener('submit', async fun
         }
     } catch (error) {
         console.error('Error submitting reservation:', error);
-        alert('Nu s-a putut conecta la server.');
+        alert("Can't connect to the server.");
     }
 });
