@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>🍽️ Live Reservations</h2>
+
+    <div class="form-section">
+        <h3>Add New Reservation</h3>
+        <form id="reservation-form">
+            <input type="text" id="customerName" placeholder="Customer Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="datetime-local" id="reservationTime" required>
+            <input type="number" id="numberOfGuests" placeholder="Guests" min="1" required>
+            <button type="submit">Submit Reservation</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer Name</th>
+            <th>Email</th>
+            <th>Time</th>
+            <th>Guests</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody id="reservations-table-body">
+        <tr><td colspan="6" class="loading">Loading data from Spring Boot API...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
