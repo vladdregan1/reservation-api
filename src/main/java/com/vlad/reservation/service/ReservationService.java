@@ -49,7 +49,8 @@ public class ReservationService {
                 entity.getCustomerName(),
                 entity.getEmail(),
                 entity.getReservationTime(),
-                entity.getNumberOfGuests()
+                entity.getNumberOfGuests(),
+                entity.getStatus()
         );
     }
 }

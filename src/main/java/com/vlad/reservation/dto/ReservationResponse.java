@@ -7,5 +7,6 @@ public record ReservationResponse(
         String customerName,
         String email,
         LocalDateTime reservationTime,
-        int numberOfGuests
+        int numberOfGuests,
+        String status
 ) {}
