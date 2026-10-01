@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -77,5 +78,17 @@ public class ReservationServiceTest {
         assertEquals("Mihai Eminescu", result.customerName());
 
         verify(reservationRepository, times(1)).save(any(Reservation.class));
+    }
+
+    @Test
+    void getAllReservations_unknownSortField_throwsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> reservationService.getAllReservations(0, 10, "password", "ASC"));
+    }
+
+    @Test
+    void getAllReservations_invalidSortDirection_throwsException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> reservationService.getAllReservations(0, 10, "id", "sideways"));
     }
 }

@@ -79,7 +79,8 @@ tr:hover {
     min-width: 150px;
 }
 
-#reservation-form button {
+#reservation-form button,
+#login-form button {
     padding: 10px 20px;
     background: #28a745;
     color: white;
@@ -89,7 +90,8 @@ tr:hover {
     font-weight: bold;
 }
 
-#reservation-form button:hover {
+#reservation-form button:hover,
+#login-form button:hover {
     background: #218838;
 }
 
@@ -143,4 +145,25 @@ tr:hover {
 
 .btn-edit:hover {
     background-color: #e0a800;
+}
+#login-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#login-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.error {
+    color: #dc3545;
+}
+
+td:nth-child(2) {
+    font-weight: bold;
 }

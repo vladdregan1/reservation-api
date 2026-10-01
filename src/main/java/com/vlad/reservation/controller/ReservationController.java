@@ -4,6 +4,8 @@ import com.vlad.reservation.dto.ReservationRequest;
 import com.vlad.reservation.dto.ReservationResponse;
 import com.vlad.reservation.service.ReservationService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reservations")
-@CrossOrigin(origins = "*")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -29,8 +30,13 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<Page<ReservationResponse>> getAllReservations(
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false)
+            @Min(value = 0, message = "pageNo cannot be negative") int pageNo,
+
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false)
+            @Min(value = 1, message = "pageSize must be at least 1")
+            @Max(value = 100, message = "pageSize cannot be more than 100") int pageSize,
+
             @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = "ASC", required = false) String sortDir
     ) {

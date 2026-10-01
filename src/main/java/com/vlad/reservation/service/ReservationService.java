@@ -11,8 +11,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class ReservationService {
+
+    private static final Set<String> ALLOWED_SORT_FIELDS =
+            Set.of("id", "customerName", "reservationTime", "numberOfGuests");
 
     private final ReservationRepository reservationRepository;
 
@@ -33,9 +38,12 @@ public class ReservationService {
     }
 
     public Page<ReservationResponse> getAllReservations(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
-                ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
+            throw new IllegalArgumentException("sortBy must be one of: " + ALLOWED_SORT_FIELDS);
+        }
+
+        Sort.Direction direction = Sort.Direction.fromString(sortDir);
+        Sort sort = Sort.by(direction, sortBy);
 
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
