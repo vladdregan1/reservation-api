@@ -24,17 +24,46 @@ A robust, enterprise-grade RESTful API built to handle restaurant reservations. 
 * Ports `8080` (API) and `3307` (MySQL host port) available on your machine.
 
 ### Run with Docker (Recommended)
-The entire ecosystem (MySQL Database + Spring Boot API) can be launched simultaneously with a single command:
+1. Copy the example config and fill in your own passwords:
+   ```bash
+   cp .env.example .env
+   ```
+2. Build the jar and start everything (MySQL + API):
+   ```bash
+   ./mvnw clean package -DskipTests
+   docker compose up -d --build
+   ```
 
 *Note: The application uses a Docker healthcheck to automatically hold the API startup sequence until the MySQL database is fully initialized and ready to accept connections.*
+
+### Run from the IDE
+Start only the database with `docker compose up -d mysql-db`, then run `ReservationApplication`. The app reads the same `.env` file automatically.
 
 ## 📖 API Documentation
 Once the application is running, the interactive Swagger UI documentation is available at:
 **[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
 
+Click **Authorize** and log in with `ADMIN_USERNAME` / `ADMIN_PASSWORD` from your `.env` to try the admin endpoints.
+
 ## 🔌 Core Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET`  | `/api/reservations` | Retrieve a paginated and sorted list of reservations (supports `pageNo`, `pageSize`, `sortBy`, `sortDir`). |
-| `POST` | `/api/reservations` | Create a new reservation with automatic validation. |
+| Method | Endpoint | Access | Description |
+|--------|----------|--------|-------------|
+| `POST` | `/api/reservations` | Public | Create a new reservation with automatic validation. |
+| `GET`  | `/api/reservations` | Admin | Retrieve a paginated and sorted list of reservations (supports `pageNo`, `pageSize` ≤ 100, `sortBy`, `sortDir`). |
+| `PUT`  | `/api/reservations/{id}` | Admin | Update a reservation. |
+| `DELETE` | `/api/reservations/{id}` | Admin | Delete a reservation. |
+
+## 🔐 Security
+
+- Anyone can create a reservation (`POST /api/reservations`).
+- Listing, editing and deleting reservations requires the **ADMIN** role (HTTP Basic auth, BCrypt-hashed password).
+- Secrets live in `.env` (not committed). The app connects to MySQL with its own limited user, not root.
+- CORS allows only the configured frontend origin(s) (`CORS_ALLOWED_ORIGINS`).
+- Request parameters are validated (`pageSize` ≤ 100, whitelisted `sortBy` fields), so bad input returns 400 instead of 500.
+- The frontend renders user data with `textContent`, which prevents stored XSS.
+
+### Possible improvements
+- JWT tokens and customer accounts
+- Rate limiting on public endpoints
+- HTTPS in production
