@@ -4,6 +4,8 @@ import com.vlad.reservation.dto.ReservationRequest;
 import com.vlad.reservation.dto.ReservationResponse;
 import com.vlad.reservation.service.ReservationService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +30,44 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<Page<ReservationResponse>> getAllReservations(
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false)
+            @Min(value = 0, message = "pageNo cannot be negative") int pageNo,
+
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false)
+            @Min(value = 1, message = "pageSize must be at least 1")
+            @Max(value = 100, message = "pageSize cannot be more than 100") int pageSize,
+
             @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = "ASC", required = false) String sortDir
     ) {
         Page<ReservationResponse> responses = reservationService.getAllReservations(pageNo, pageSize, sortBy, sortDir);
         return ResponseEntity.ok(responses);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        reservationService.deleteReservation(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ReservationResponse> updateReservation(
+            @PathVariable Long id,
+            @Valid @RequestBody ReservationRequest request) {
+
+        ReservationResponse response = reservationService.updateReservation(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/confirm")
+    public ResponseEntity<ReservationResponse> confirmReservation(@PathVariable Long id) {
+        ReservationResponse response = reservationService.confirmReservation(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<ReservationResponse> cancelReservation(@PathVariable Long id) {
+        ReservationResponse response = reservationService.cancelReservation(id);
+        return ResponseEntity.ok(response);
     }
 }

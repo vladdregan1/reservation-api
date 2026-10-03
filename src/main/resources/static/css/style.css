@@ -1,0 +1,189 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.loading {
+    font-style: italic;
+    color: #666;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #e2e3e5;
+    font-size: 0.9em;
+}
+
+.form-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.form-section h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+#reservation-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#reservation-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 150px;
+}
+
+#reservation-form button,
+#login-form button {
+    padding: 10px 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#reservation-form button:hover,
+#login-form button:hover {
+    background: #218838;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+    color: #212529;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-edit:hover {
+    background-color: #e0a800;
+}
+
+.status-pending   { background: #fff3cd; color: #856404; }
+.status-confirmed { background: #d4edda; color: #155724; }
+.status-cancelled { background: #f8d7da; color: #721c24; }
+
+.btn-confirm, .btn-cancel {
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.btn-confirm { background-color: #28a745; }
+.btn-confirm:hover { background-color: #218838; }
+
+.btn-cancel { background-color: #6c757d; }
+.btn-cancel:hover { background-color: #5a6268; }
+#login-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#login-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.error {
+    color: #dc3545;
+}
+
+td:nth-child(2) {
+    font-weight: bold;
+}

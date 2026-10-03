@@ -1,5 +1,7 @@
 package com.vlad.reservation.dto;
 
+import com.vlad.reservation.entity.ReservationStatus;
+
 import java.time.LocalDateTime;
 
 public record ReservationResponse(
@@ -7,5 +9,6 @@ public record ReservationResponse(
         String customerName,
         String email,
         LocalDateTime reservationTime,
-        int numberOfGuests
+        int numberOfGuests,
+        ReservationStatus status
 ) {}
