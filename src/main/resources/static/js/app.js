@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api/reservations';
+const API_URL = '/api/reservations';   // same server as this page, so no host needed
 
 let currentPage = 0;
 const pageSize = 5;
@@ -49,13 +49,19 @@ async function fetchReservations() {
 
             const statusCell = addCell(row, '');
             const badge = document.createElement('span');
-            badge.className = 'status-badge';
+            badge.className = 'status-badge status-' + reservation.status.toLowerCase();
             badge.textContent = reservation.status;
             statusCell.appendChild(badge);
 
             const actions = addCell(row, '');
             addButton(actions, 'Edit', 'btn-edit', () => loadEditForm(reservation.id));
-            addButton(actions, 'Cancel', 'btn-delete', () => deleteReservation(reservation.id));
+            if (reservation.status === 'PENDING') {
+                addButton(actions, 'Confirm', 'btn-confirm', () => changeStatus(reservation.id, 'confirm'));
+            }
+            if (reservation.status !== 'CANCELLED') {
+                addButton(actions, 'Cancel', 'btn-cancel', () => changeStatus(reservation.id, 'cancel'));
+            }
+            addButton(actions, 'Delete', 'btn-delete', () => deleteReservation(reservation.id));
 
             tableBody.appendChild(row);
         });
@@ -127,7 +133,7 @@ document.getElementById('reservation-form').addEventListener('submit', async fun
             if (authHeader) fetchReservations();
         } else {
             const errorData = await response.json();
-            alert('Eroare de validare: ' + JSON.stringify(errorData));
+            alert('Validation error: ' + JSON.stringify(errorData));
         }
     } catch (error) {
         console.error('Error:', error);
@@ -135,8 +141,27 @@ document.getElementById('reservation-form').addEventListener('submit', async fun
     }
 });
 
+async function changeStatus(id, action) {
+    try {
+        const response = await fetch(`${API_URL}/${id}/${action}`, {
+            method: 'PATCH',
+            headers: adminHeaders()
+        });
+
+        if (response.ok) {
+            fetchReservations();
+        } else {
+            const errorData = await response.json();
+            alert(errorData.error);
+        }
+    } catch (error) {
+        console.error('Error changing status:', error);
+        alert('Server error.');
+    }
+}
+
 async function deleteReservation(id) {
-    if (!confirm('Are you sure you want to cancel this reservation?')) {
+    if (!confirm('Delete this reservation permanently?')) {
         return;
     }
 
@@ -164,7 +189,7 @@ function loadEditForm(id) {
     document.getElementById('customerName').value = reservation.customerName;
     document.getElementById('email').value = reservation.email;
 
-    const dateStr = new Date(reservation.reservationTime).toISOString().slice(0, 16);
+    const dateStr = reservation.reservationTime.slice(0, 16);   // "2026-10-05T19:00"
     document.getElementById('reservationTime').value = dateStr;
 
     document.getElementById('numberOfGuests').value = reservation.numberOfGuests;

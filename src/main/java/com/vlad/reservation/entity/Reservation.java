@@ -24,8 +24,9 @@ public class Reservation {
     @Column(nullable = false)
     private int numberOfGuests;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String status = "PENDING";
+    private ReservationStatus status = ReservationStatus.PENDING;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -42,6 +43,6 @@ public class Reservation {
     public int getNumberOfGuests() { return numberOfGuests; }
     public void setNumberOfGuests(int numberOfGuests) { this.numberOfGuests = numberOfGuests; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public ReservationStatus getStatus() { return status; }
+    public void setStatus(ReservationStatus status) { this.status = status; }
 }
