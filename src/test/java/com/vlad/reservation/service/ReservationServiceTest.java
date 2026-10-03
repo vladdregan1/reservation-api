@@ -3,6 +3,9 @@ package com.vlad.reservation.service;
 import com.vlad.reservation.dto.ReservationRequest;
 import com.vlad.reservation.dto.ReservationResponse;
 import com.vlad.reservation.entity.Reservation;
+import com.vlad.reservation.entity.ReservationStatus;
+import com.vlad.reservation.exception.InvalidStatusChangeException;
+import com.vlad.reservation.exception.ResourceNotFoundException;
 import com.vlad.reservation.repository.ReservationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -90,5 +94,58 @@ public class ReservationServiceTest {
     void getAllReservations_invalidSortDirection_throwsException() {
         assertThrows(IllegalArgumentException.class,
                 () -> reservationService.getAllReservations(0, 10, "id", "sideways"));
+    }
+
+    @Test
+    void confirmReservation_pending_becomesConfirmed() {
+        Reservation reservation = new Reservation();   // status is PENDING by default
+        reservation.setId(1L);
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+
+        ReservationResponse result = reservationService.confirmReservation(1L);
+
+        assertEquals(ReservationStatus.CONFIRMED, result.status());
+    }
+
+    @Test
+    void confirmReservation_cancelled_throwsException() {
+        Reservation reservation = new Reservation();
+        reservation.setId(1L);
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+
+        assertThrows(InvalidStatusChangeException.class,
+                () -> reservationService.confirmReservation(1L));
+    }
+
+    @Test
+    void cancelReservation_confirmed_becomesCancelled() {
+        Reservation reservation = new Reservation();
+        reservation.setId(1L);
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+
+        ReservationResponse result = reservationService.cancelReservation(1L);
+
+        assertEquals(ReservationStatus.CANCELLED, result.status());
+    }
+
+    @Test
+    void cancelReservation_alreadyCancelled_throwsException() {
+        Reservation reservation = new Reservation();
+        reservation.setId(1L);
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(reservation));
+
+        assertThrows(InvalidStatusChangeException.class,
+                () -> reservationService.cancelReservation(1L));
+    }
+
+    @Test
+    void confirmReservation_notFound_throwsException() {
+        when(reservationRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> reservationService.confirmReservation(1L));
     }
 }

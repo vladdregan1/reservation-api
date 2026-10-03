@@ -2,6 +2,7 @@ package com.vlad.reservation.controller;
 
 import com.vlad.reservation.config.SecurityConfig;
 import com.vlad.reservation.dto.ReservationResponse;
+import com.vlad.reservation.entity.ReservationStatus;
 import com.vlad.reservation.service.ReservationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,7 +73,7 @@ class ReservationControllerSecurityTest {
     void createWithoutLogin_isAllowed() throws Exception {
         LocalDateTime time = LocalDateTime.now().plusDays(2).withNano(0);
         when(reservationService.createReservation(any()))
-                .thenReturn(new ReservationResponse(1L, "Mihai Eminescu", "mihai@gmail.com", time, 4, "PENDING"));
+                .thenReturn(new ReservationResponse(1L, "Mihai Eminescu", "mihai@gmail.com", time, 4, ReservationStatus.PENDING));
 
         String body = """
                 {
@@ -99,5 +101,22 @@ class ReservationControllerSecurityTest {
         mockMvc.perform(delete("/api/reservations/1")
                 .with(httpBasic("admin", "test-password")))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void confirmWithoutLogin_returns401() throws Exception {
+        mockMvc.perform(patch("/api/reservations/1/confirm"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void confirmAsAdmin_returns200() throws Exception {
+        when(reservationService.confirmReservation(1L))
+                .thenReturn(new ReservationResponse(1L, "Mihai Eminescu", "mihai@gmail.com",
+                        LocalDateTime.now().plusDays(2), 4, ReservationStatus.CONFIRMED));
+
+        mockMvc.perform(patch("/api/reservations/1/confirm")
+                        .with(httpBasic("admin", "test-password")))
+                .andExpect(status().isOk());
     }
 }

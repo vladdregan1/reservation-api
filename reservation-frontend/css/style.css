@@ -146,6 +146,26 @@ tr:hover {
 .btn-edit:hover {
     background-color: #e0a800;
 }
+
+.status-pending   { background: #fff3cd; color: #856404; }
+.status-confirmed { background: #d4edda; color: #155724; }
+.status-cancelled { background: #f8d7da; color: #721c24; }
+
+.btn-confirm, .btn-cancel {
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.btn-confirm { background-color: #28a745; }
+.btn-confirm:hover { background-color: #218838; }
+
+.btn-cancel { background-color: #6c757d; }
+.btn-cancel:hover { background-color: #5a6268; }
 #login-form {
     display: flex;
     gap: 10px;
