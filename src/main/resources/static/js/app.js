@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api/reservations';
+const API_URL = '/api/reservations';   // same server as this page, so no host needed
 
 let currentPage = 0;
 const pageSize = 5;

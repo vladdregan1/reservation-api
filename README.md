@@ -43,6 +43,12 @@ A REST API for restaurant reservations, built with Spring Boot. Customers can bo
 ### Run from the IDE
 Start only the database with `docker compose up -d mysql-db`, then run `ReservationApplication`. The app reads the same `.env` file automatically.
 
+## 🖥️ Frontend
+A small HTML/JavaScript dashboard is served by Spring Boot itself from `src/main/resources/static/`. Once the app is running, open:
+**[http://localhost:8080](http://localhost:8080)**
+
+Anyone can book a table there. Log in with `ADMIN_USERNAME` / `ADMIN_PASSWORD` to see, edit, confirm, cancel, and delete reservations.
+
 ## 📖 API Documentation
 Once the application is running, the interactive Swagger UI documentation is available at:
 **[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**

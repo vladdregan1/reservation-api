@@ -70,6 +70,14 @@ class ReservationControllerSecurityTest {
     }
 
     @Test
+    void frontendWithoutLogin_isAllowed() throws Exception {
+        mockMvc.perform(get("/index.html"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/js/app.js"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void createWithoutLogin_isAllowed() throws Exception {
         LocalDateTime time = LocalDateTime.now().plusDays(2).withNano(0);
         when(reservationService.createReservation(any()))
